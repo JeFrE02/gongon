@@ -1,0 +1,42 @@
+# Desktop installers. Windows .exe (NSIS + portable) cannot be built on Apple Silicon here:
+# electron-builder's bundled makensis is x86_64-only and this machine has no Rosetta 2.
+# This workflow builds both platforms on native runners and uploads the artifacts.
+name: desktop
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            target: --mac dmg zip
+            artifact: mac
+          - os: windows-latest
+            target: --win nsis portable
+            artifact: win
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build client bundle
+        run: npm run build
+      - name: Package desktop app (unsigned)
+        run: npx electron-builder ${{ matrix.target }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GonGon-${{ matrix.artifact }}
+          path: |
+            proof/desktop/*.dmg
+            proof/desktop/*.zip
+            proof/desktop/*.exe
+          if-no-files-found: error

@@ -1,0 +1,43 @@
+# Packaging config for the Electron desktop build (macOS + Windows).
+# Artifacts land in proof/desktop/ (gitignored) — these are build outputs, not sources.
+appId: com.gongon.game
+productName: GonGon
+directories:
+  output: proof/desktop
+  buildResources: desktop/build
+files:
+  - dist/**
+  - desktop/main.js
+  - desktop/bundle.js
+  - desktop/preload.cjs
+  - package.json
+  # The shell needs only Electron + node builtins; three/ws are already bundled into dist.
+  - '!node_modules/**'
+asar: true
+# No signing/notarization credentials are available: artifacts are unsigned.
+mac:
+  icon: desktop/build/icon.icns
+  target:
+    - target: dmg
+      arch: [arm64, x64]
+    - target: zip
+      arch: [arm64, x64]
+  category: public.app-category.games
+  identity: null
+  notarize: false
+  # Icon comes from desktop/build/icon.icns (regenerate: python3 desktop/build/make-icons.py).
+win:
+  icon: desktop/build/icon.ico
+  target:
+    - target: nsis
+      arch: [x64]
+    - target: portable
+      arch: [x64]
+  # Unsigned: no code-signing certificate available.
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  artifactName: GonGon-Setup-${version}-${arch}.${ext}
+portable:
+  artifactName: GonGon-Portable-${version}-${arch}.${ext}

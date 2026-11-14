@@ -1,0 +1,34 @@
+{
+  "name": "gongon",
+  "productName": "GonGon",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GonGon — top-down survivor squad game (browser + Electron desktop, solo or WebSocket co-op)",
+  "author": "GonGon project",
+  "type": "module",
+  "main": "desktop/main.js",
+  "scripts": {
+    "dev": "vite",
+    "server": "node server/index.js",
+    "build": "vite build",
+    "start": "node server/index.js",
+    "desktop": "npm run build && electron .",
+    "desktop:test": "electron desktop/test-desktop.mjs",
+    "desktop:icons": "python3 desktop/build/make-icons.py",
+    "desktop:proof": "node desktop/final-pack.mjs",
+    "desktop:mac": "npm run build && electron-builder --mac dmg zip",
+    "desktop:win": "npm run build && electron-builder --win nsis portable --x64",
+    "desktop:win:zip": "npm run build && electron-builder --win zip --x64",
+    "desktop:all": "npm run build && electron-builder --mac dmg zip --win nsis portable --x64",
+    "test": "node tests/sim.test.js"
+  },
+  "dependencies": {
+    "three": "^0.169.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "electron": "^45.3.2",
+    "electron-builder": "^26.18.0",
+    "vite": "^5.4.10"
+  }
+}

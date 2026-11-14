@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#0b1220" />
+<title>GonGon</title>
+<link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+<div id="app">
+  <canvas id="scene"></canvas>
+
+  <div id="hud" class="hidden">
+    <div class="stat-block">
+      <div class="wave-line"><span id="waveNum">1</span><span class="wave-label" data-i18n="hud.wave">WAVE</span></div>
+      <div class="sub-line"><span id="killNum">0</span> <span data-i18n="hud.slain">slain</span></div>
+      <div class="coin-line"><i class="coin-dot"></i><span id="coinNum">0</span></div>
+    </div>
+    <div id="squadList"></div>
+    <div id="banner" class="banner"></div>
+    <div id="centerHint" class="center-hint"></div>
+  </div>
+
+  <div id="touch" class="hidden">
+    <div class="pad" id="pad">
+      <button class="pad-btn up" data-dir="up" data-i18n-aria="menu.name" aria-label="Move up">▲</button>
+      <button class="pad-btn left" data-dir="left" aria-label="Move left">◀</button>
+      <button class="pad-btn right" data-dir="right" aria-label="Move right">▶</button>
+      <button class="pad-btn down" data-dir="down" aria-label="Move down">▼</button>
+    </div>
+    <div class="actions">
+      <button class="act" id="btnReload" aria-label="Reload">⟳</button>
+      <button class="act" id="btnShop" aria-label="Shop">◆</button>
+      <button class="act act-primary" id="btnDash" aria-label="Dash">»</button>
+    </div>
+  </div>
+
+  <div id="ammo">
+    <div class="ammo-pips" id="ammoPips"></div>
+    <div class="ammo-text"><span id="ammoNum">12</span><span id="ammoMax">/12</span></div>
+    <div class="weapon-name" id="weaponName">Longbow</div>
+    <div class="reload-bar"><i id="reloadFill"></i></div>
+  </div>
+
+  <div id="topRight">
+    <button class="icon-btn" id="btnAudio" aria-label="Toggle audio" data-i18n-aria="menu.audio">♪</button>
+    <button class="icon-btn" id="btnPause" aria-label="Pause" data-i18n-aria="menu.pause">❚❚</button>
+  </div>
+
+  <!-- Menus -->
+  <div id="menu" class="overlay">
+    <div class="panel">
+      <div class="menu-top">
+        <div class="eyebrow" data-i18n="brand.eyebrow">SURVIVOR SQUAD</div>
+        <div class="lang-switch" id="langSwitch" role="group" aria-label="Language">
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="ru">RU</button>
+        </div>
+      </div>
+      <h1 data-i18n="brand.name">GonGon</h1>
+      <p class="lede" data-i18n="brand.lede">Hold the clearing. The horde comes in waves.</p>
+      <label class="field">
+        <span data-i18n="menu.name">Call sign</span>
+        <input id="nameInput" maxlength="14" placeholder="Ranger" data-i18n-ph="menu.namePlaceholder" autocomplete="off" />
+      </label>
+      <div class="btn-row">
+        <button class="btn primary" id="btnSolo" data-i18n="menu.solo">Play solo</button>
+        <button class="btn" id="btnHost" data-i18n="menu.host">Host coop</button>
+      </div>
+      <div class="join-row">
+        <input id="codeInput" maxlength="4" placeholder="CODE" data-i18n-ph="menu.codePlaceholder" autocomplete="off" />
+        <button class="btn" id="btnJoin" data-i18n="menu.join">Join</button>
+      </div>
+      <label class="field">
+        <span data-i18n="menu.coopServer">Coop server</span>
+        <input id="coopInput" placeholder="ws://host:8787/ws — blank = this page" data-i18n-ph="menu.coopServerPlaceholder" autocomplete="off" spellcheck="false" />
+      </label>
+      <p class="coop-err" id="coopErr"></p>
+      <p class="hint" id="menuHint" data-i18n="menu.controls">WASD / arrows to move · auto-attack · space dash · R reload · B shop · Esc pause</p>
+    </div>
+  </div>
+
+  <div id="upgrades" class="overlay hidden">
+    <div class="upgrade-wrap">
+      <div class="eyebrow" data-i18n="hud.levelUp">LEVEL UP</div>
+      <div class="cards" id="cards"></div>
+    </div>
+  </div>
+
+  <div id="shop" class="overlay hidden">
+    <div class="panel wide">
+      <div class="shop-head">
+        <div class="eyebrow" data-i18n="shop.eyebrow">OUTPOST STORE</div>
+        <div class="shop-coins"><i class="coin-dot"></i><span id="shopCoins">0</span></div>
+      </div>
+      <div class="shop-grid" id="shopGrid"></div>
+      <button class="btn primary" id="btnShopClose" data-i18n="shop.back">Back to the fight</button>
+    </div>
+  </div>
+
+  <div id="pause" class="overlay hidden">
+    <div class="panel">
+      <div class="eyebrow" data-i18n="pause.eyebrow">PAUSED</div>
+      <h2 data-i18n="pause.title">Breath.</h2>
+      <div class="btn-row">
+        <button class="btn primary" id="btnResume" data-i18n="pause.resume">Resume</button>
+        <button class="btn" id="btnQuit" data-i18n="pause.leave">Leave run</button>
+      </div>
+      <p class="hint" id="roomHint"></p>
+    </div>
+  </div>
+
+  <div id="over" class="overlay hidden">
+    <div class="panel">
+      <div class="eyebrow" id="overEyebrow" data-i18n="over.fell">THE CLEARING FELL</div>
+      <h2 id="overTitle" data-i18n="over.ended">Run ended</h2>
+      <div class="over-stats" id="overStats"></div>
+      <div class="btn-row">
+        <button class="btn primary" id="btnAgain" data-i18n="over.again">Run again</button>
+        <button class="btn" id="btnMenu" data-i18n="over.menu">Main menu</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="loading" class="overlay">
+    <div class="loading-wrap">
+      <div class="loading-title">GonGon</div>
+      <div class="loading-bar"><i id="loadFill"></i></div>
+      <div class="loading-text" id="loadText" data-i18n="loading.assets">Loading survivors…</div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+</div>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
