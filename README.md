@@ -37,9 +37,9 @@ npm install
 npm run desktop        # build dist/, then launch the app from source
 npm run desktop:test   # shell checks: offline bundle, 404s, CSP, nav guards, preload
 npm run desktop:proof  # package + launch + drive the packaged app, print artifact hashes
-npm run desktop:mac    # → proof/desktop/GonGon-0.1.0-arm64.dmg + GonGon-0.1.0-arm64-mac.zip
-npm run desktop:win    # → GonGon-Setup-0.1.0-x64.exe + GonGon-Portable-0.1.0-x64.exe
-npm run desktop:win:zip  # → proof/desktop/GonGon-0.1.0-win.zip (works without Rosetta 2)
+npm run desktop:mac    # → proof/desktop/GonGon-1.0.0-arm64.dmg + GonGon-1.0.0-arm64-mac.zip
+npm run desktop:win    # → GonGon-Setup-1.0.0-x64.exe + GonGon-Portable-1.0.0-x64.exe
+npm run desktop:win:zip  # → proof/desktop/GonGon-1.0.0-win.zip (works without Rosetta 2)
 npm run desktop:icons  # regenerate desktop/build/icon.png + icon.icns + icon.ico (stdlib-only):
                        # off-white G + red cone-hat marker on a night-blue tile
 ```
@@ -47,9 +47,9 @@ npm run desktop:icons  # regenerate desktop/build/icon.png + icon.icns + icon.ic
 Artifacts (gitignored build output):
 
 ```
-proof/desktop/GonGon-0.1.0-arm64.dmg         macOS installer (unsigned, Apple Silicon)
-proof/desktop/GonGon-0.1.0-arm64-mac.zip     zipped GonGon.app
-proof/desktop/GonGon-0.1.0-win.zip           Windows x64 build (unzip → GonGon.exe)
+proof/desktop/GonGon-1.0.0-arm64.dmg         macOS installer (unsigned, Apple Silicon)
+proof/desktop/GonGon-1.0.0-arm64-mac.zip     zipped GonGon.app
+proof/desktop/GonGon-1.0.0-win.zip           Windows x64 build (unzip → GonGon.exe)
 proof/desktop/mac-arm64/GonGon.app           unpacked macOS app used for the launch proof
 ```
 
